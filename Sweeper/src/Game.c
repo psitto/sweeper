@@ -5,7 +5,10 @@ int start_game()
 	time_t t = time(0);
 	struct tm tinfo;
 	localtime_s(&tinfo, &t);
-	snprintf(msg_about, MESSAGE_ABOUT_LENGTH, MESSAGE_ABOUT_FORMAT, tinfo.tm_year + 1900);
+	snprintf(msg_about,
+		MESSAGE_ABOUT_LENGTH,
+		MESSAGE_ABOUT_FORMAT,
+		tinfo.tm_year + 1900);
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 	SDL_SetHint(SDL_HINT_WINDOWS_ENABLE_MENU_MNEMONICS, "1");
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0)
@@ -13,7 +16,12 @@ int start_game()
 		printf("SDL2 initialization error: %s\n", SDL_GetError());
 		return 0;
 	}
-	window = SDL_CreateWindow("", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINW, WINH, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow("",
+		SDL_WINDOWPOS_CENTERED,
+		SDL_WINDOWPOS_CENTERED,
+		WINW,
+		WINH + GetSystemMetrics(SM_CYMENU),
+		SDL_WINDOW_SHOWN);
 	if (window == NULL)
 	{
 		printf("SDL2 window creation error.\n");
