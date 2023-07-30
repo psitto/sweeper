@@ -20,10 +20,11 @@
 #define MENUID_ABOUT 4
 
 #define MESSAGE_ABOUT_FORMAT "\
-Sweeper\n\
-(C) 2023-%04d psitto\n\
-The MIT license"
-#define MESSAGE_ABOUT_LENGTH 50
+Sweeper\n\n\
+Copyright (c) 2023-%04d psitto\n\
+The MIT License\n\n\
+Built with SDL2, SDL2_image and SDL2_ttf."
+#define MESSAGE_ABOUT_LENGTH 100
 
 SDL_Window* window;
 SDL_Renderer* renderer;
