@@ -85,6 +85,7 @@ void handle_input() {
 				break;
 			case MENUID_RESET:
 				renew_field(field.difficulty);
+				draw_field();
 				break;
 			case MENUID_ABOUT:
 				SDL_ShowSimpleMessageBox(0,
