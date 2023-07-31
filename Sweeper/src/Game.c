@@ -54,7 +54,7 @@ void handle_input() {
 	SDL_GetMouseState(&mousex, &mousey);
 	SDL_Event e;
 	SDL_PumpEvents();
-	while (SDL_PollEvent(&e))
+	if (SDL_WaitEvent(&e) != 0)
 	{
 		switch (e.type)
 		{
@@ -68,6 +68,10 @@ void handle_input() {
 				renew_field(field.difficulty);
 				draw_field();
 			}
+			break;
+		case SDL_WINDOWEVENT:
+			if (e.window.event == SDL_WINDOWEVENT_EXPOSED)
+				draw_field();
 			break;
 		case SDL_QUIT:
 			running = 0;
