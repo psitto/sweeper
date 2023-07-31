@@ -1,6 +1,6 @@
 #include "Field.h"
 
-const int DIFFICULTY_SIZE[3] = { 8, 16, 22 };
+const int DIFFICULTY_SIZE[3] = { 8, 16, 20 };
 const int DIFFICULTY_BOMB_QUANTITY[3] = { 10, 40, 99 };
 
 static int make_bombs(unsigned int quantity, unsigned int start_index);
