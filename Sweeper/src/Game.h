@@ -10,6 +10,10 @@
 #include <time.h>
 #include "Field.h"
 
+#define VERSION_MAJOR 1
+#define VERSION_MINOR 0
+#define VERSION_PATCH 0
+
 #define WINW 800
 #define WINH 800
 
@@ -20,11 +24,11 @@
 #define MENUID_ABOUT 4
 
 #define MESSAGE_ABOUT_FORMAT "\
-Sweeper\n\n\
+Sweeper v%d.%d.%d\n\n\
 Copyright (c) 2023-%04d psitto\n\
 The MIT License\n\n\
 Built with SDL2, SDL2_image and SDL2_ttf."
-#define MESSAGE_ABOUT_LENGTH 100
+#define MESSAGE_ABOUT_LENGTH 115
 
 SDL_Window* window;
 SDL_Renderer* renderer;
