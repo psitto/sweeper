@@ -11,7 +11,7 @@ Made using SDL and the Windows API.
 2. Open solution using the latest Visual Studio.
 3. Choose the desired configuration (Release/Debug).
 4. Build the solution.
-5. Make sure the program can find the necessary DLLs.
+5. Make sure the program can find the necessary assets and DLLs.
 6. Done!
 
 ## To be done
