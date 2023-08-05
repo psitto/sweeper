@@ -24,7 +24,7 @@ int start_game()
 		SDL_WINDOWPOS_CENTERED,
 		WINW,
 		WINH + GetSystemMetrics(SM_CYMENU),
-		SDL_WINDOW_SHOWN);
+		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 	if (window == NULL)
 	{
 		printf("SDL2 window creation error.\n");
@@ -56,8 +56,7 @@ int start_game()
 void handle_input() {
 	SDL_GetMouseState(&mousex, &mousey);
 	SDL_Event e;
-	SDL_PumpEvents();
-	if (SDL_WaitEvent(&e) != 0)
+	while (SDL_PollEvent(&e))
 	{
 		switch (e.type)
 		{
@@ -69,12 +68,7 @@ void handle_input() {
 			if (e.key.keysym.sym == SDLK_r)
 			{
 				renew_field(field.difficulty);
-				draw_field();
 			}
-			break;
-		case SDL_WINDOWEVENT:
-			if (e.window.event == SDL_WINDOWEVENT_EXPOSED)
-				draw_field();
 			break;
 		case SDL_QUIT:
 			running = 0;
@@ -88,11 +82,9 @@ void handle_input() {
 			case MENUID_NEW_MEDIUM:
 			case MENUID_NEW_HARD:
 				renew_field(menu_id);
-				draw_field();
 				break;
 			case MENUID_RESET:
 				renew_field(field.difficulty);
-				draw_field();
 				break;
 			case MENUID_ABOUT:
 				SDL_ShowSimpleMessageBox(0,

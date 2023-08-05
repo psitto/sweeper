@@ -13,11 +13,11 @@ int main() {
 	load_assets();
 	field = make_field(1);
 	update_title();
-	draw_field();
 
 	while (running)
 	{
 		handle_input();
+		draw_field();
 	}
 
 	destroy_field();

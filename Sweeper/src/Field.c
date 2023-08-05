@@ -125,7 +125,6 @@ void reveal_tile(unsigned int index)
 	}
 	*tile |= IS_SHOWN;
 	field.tiles_remaining--;
-	draw_tile(index);
 	if (field.tiles_remaining == field.bomb_quantity)
 	{
 		win();
@@ -154,12 +153,11 @@ void win()
 	{
 		if (field.tiles[field.bomb_indexes[i]] & IS_FLAGGED) continue;
 		field.tiles[field.bomb_indexes[i]] |= IS_FLAGGED;
-		draw_tile(field.bomb_indexes[i]);
 	}
-	SDL_RenderPresent(renderer);
 	field.guesses_remaining = 0;
 	update_title();
 	field.over = 1;
+	draw_field();
 
 	long long playtime = time(0) - field.starting_time;
 	char time_msg[29];
@@ -173,11 +171,6 @@ void win()
 void lose()
 {
 	field.over = 1;
-	for (unsigned int i = 0; i < field.bomb_quantity; i++)
-	{
-		draw_tile(field.bomb_indexes[i]);
-	}
-	SDL_RenderPresent(renderer);
 }
 
 void on_left_click()
@@ -185,7 +178,6 @@ void on_left_click()
 	if (field.over)
 	{
 		renew_field(field.difficulty);
-		draw_field();
 		return;
 	}
 	int ht = get_hovered_tile_index(mousex, mousey);
@@ -197,7 +189,6 @@ void on_left_click()
 		field.starting_time = time(0);
 	}
 	reveal_tile(ht);
-	SDL_RenderPresent(renderer);
 }
 
 void on_right_click()
@@ -205,7 +196,6 @@ void on_right_click()
 	if (field.over)
 	{
 		renew_field(field.difficulty);
-		draw_field();
 		return;
 	}
 	if (field.bomb_quantity == 0) return;
@@ -213,8 +203,6 @@ void on_right_click()
 	if (ht == -1) return;
 	flag_tile(ht);
 	update_title();
-	draw_tile(ht);
-	SDL_RenderPresent(renderer);
 }
 
 void renew_field(unsigned int difficulty)
