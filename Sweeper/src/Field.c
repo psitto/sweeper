@@ -37,11 +37,7 @@ void draw_tile(unsigned int index)
 		(index / field.size) * field.tile_size_px,
 		field.tile_size_px,
 		field.tile_size_px };
-	if (field.over)
-	{
-		SDL_RenderCopy(renderer, tex_tile_bomb, NULL, &dst_rect_tile);
-	}
-	else if (field.tiles[index] & IS_SHOWN)
+	if (field.tiles[index] & IS_SHOWN)
 	{
 		SDL_RenderCopy(renderer, tex_tile_shown, NULL, &dst_rect_tile);
 		if ((field.tiles[index] & 0xF))
@@ -55,6 +51,10 @@ void draw_tile(unsigned int index)
 			dst_rect_text.y = dst_rect_tile.y + (dst_rect_tile.h - dst_rect_text.h) / 2;
 			SDL_RenderCopy(renderer, text_hint->texture, NULL, &dst_rect_text);
 		}
+	}
+	else if (field.over && field.tiles[index] & IS_BOMB)
+	{
+		SDL_RenderCopy(renderer, tex_tile_bomb, NULL, &dst_rect_tile);
 	}
 	else if (field.tiles[index] & IS_FLAGGED)
 	{
