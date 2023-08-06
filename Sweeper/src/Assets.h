@@ -12,7 +12,6 @@ typedef struct Text
 } Text;
 
 SDL_Texture* tex_tile_hidden;
-SDL_Texture* tex_tile_shown;
 SDL_Texture* tex_tile_flagged;
 SDL_Texture* tex_tile_bomb;
 

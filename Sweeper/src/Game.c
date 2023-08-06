@@ -39,7 +39,7 @@ int start_game()
 		printf("SDL2 renderer creation error.\n");
 		return 0;
 	}
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
+	SDL_SetRenderDrawColor(renderer, 0x96, 0x96, 0x96, 0xFF);
 	if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG)
 	{
 		printf("SDL_image initialization error.");

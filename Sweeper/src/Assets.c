@@ -26,7 +26,6 @@ static void make_hint_textures()
 void load_assets()
 {
 	tex_tile_hidden = IMG_LoadTexture(renderer, "assets\\tile.png");
-	tex_tile_shown = IMG_LoadTexture(renderer, "assets\\tile_shown.png");
 	tex_tile_bomb = IMG_LoadTexture(renderer, "assets\\tile_bomb.png");
 	tex_tile_flagged = IMG_LoadTexture(renderer, "assets\\tile_flagged.png");
 	text_font = TTF_OpenFont("assets\\Poppins-Regular.ttf", 64);
@@ -36,7 +35,6 @@ void load_assets()
 void unload_assets()
 {
 	SDL_DestroyTexture(tex_tile_hidden);
-	SDL_DestroyTexture(tex_tile_shown);
 	SDL_DestroyTexture(tex_tile_bomb);
 	SDL_DestroyTexture(tex_tile_flagged);
 	for (int i = 0; i < 8; i++)

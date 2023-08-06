@@ -59,7 +59,7 @@ void draw_tile(unsigned int index)
 	}
 	else if (field.tiles[index].data & IS_SHOWN)
 	{
-		SDL_RenderCopy(renderer, tex_tile_shown, NULL, &dst_rect_tile);
+		// render nothing
 		if ((field.tiles[index].data & 0xF))
 		{
 			Text* text_hint = &hint_text[(field.tiles[index].data & 0xF) - 1];
