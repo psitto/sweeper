@@ -11,9 +11,9 @@ typedef struct Field
 	unsigned int bomb_quantity;
 	unsigned int difficulty;
 	unsigned int tiles_remaining;
-	unsigned int over;
 	unsigned int* bomb_indexes;
 	int guesses_remaining;
+	int over, lost;
 	long long starting_time;
 } Field;
 typedef struct TileNeighbors

@@ -52,7 +52,7 @@ void draw_tile(unsigned int index)
 			SDL_RenderCopy(renderer, text_hint->texture, NULL, &dst_rect_text);
 		}
 	}
-	else if (field.over && field.tiles[index] & IS_BOMB)
+	else if (field.over && field.lost && field.tiles[index] & IS_BOMB)
 	{
 		SDL_RenderCopy(renderer, tex_tile_bomb, NULL, &dst_rect_tile);
 	}
@@ -173,6 +173,7 @@ void win()
 void lose()
 {
 	field.over = 1;
+	field.lost = 1;
 	for (unsigned int i = 0; i < field.bomb_quantity; i++)
 	{
 		draw_tile(field.bomb_indexes[i]);
