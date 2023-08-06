@@ -8,24 +8,30 @@ static void calc_hints();
 
 Field make_field(unsigned int difficulty)
 {
-	Field f = { NULL, 0, 0, 0, 0, 0, 0, 0, NULL, 0, 0 };
-	if (difficulty < 0 || difficulty > 2)
-	{
-		printf("Difficulty %d is invalid. Must be 0, 1 or 2.\n", difficulty);
-		return f;
-	}
-	f.difficulty = difficulty;
+	Field f;
 	f.size = DIFFICULTY_SIZE[difficulty];
 	f.tile_count = f.size * f.size;
-	f.tiles_remaining = f.tile_count;
 	f.tile_size_px = WINW / f.size;
-	f.tiles = (Tile*)calloc(f.tile_count, sizeof(Tile));
+	f.bomb_quantity = 0;
+	f.difficulty = difficulty;
 	f.guesses_remaining = DIFFICULTY_BOMB_QUANTITY[difficulty];
+	f.tiles_remaining = f.tile_count;
+	f.tiles = (Tile*)calloc(f.tile_count, sizeof(Tile));
+	for (int i = 0; i < f.tile_count; i++)
+	{
+		f.tiles[i].tween = twn_make_player();
+	}
+	f.over = 0;
+	f.lost = 0;
 	return f;
 }
 
 void destroy_field()
 {
+	for (int i = 0; i < field.tile_count; i++)
+	{
+		free(field.tiles[i].tween);
+	}
 	free(field.tiles);
 	free(field.bomb_indexes);
 }
@@ -37,7 +43,7 @@ void draw_tile(unsigned int index)
 		(index / field.size) * field.tile_size_px,
 		field.tile_size_px,
 		field.tile_size_px };
-	if (field.over && field.tiles[index] & IS_BOMB)
+	if (field.over && field.tiles[index].data & IS_BOMB)
 	{
 		if (field.lost)
 		{
@@ -48,12 +54,12 @@ void draw_tile(unsigned int index)
 			SDL_RenderCopy(renderer, tex_tile_flagged, NULL, &dst_rect_tile);
 		}
 	}
-	else if (field.tiles[index] & IS_SHOWN)
+	else if (field.tiles[index].data & IS_SHOWN)
 	{
 		SDL_RenderCopy(renderer, tex_tile_shown, NULL, &dst_rect_tile);
-		if ((field.tiles[index] & 0xF))
+		if ((field.tiles[index].data & 0xF))
 		{
-			Text* text_hint = &hint_text[(field.tiles[index] & 0xF) - 1];
+			Text* text_hint = &hint_text[(field.tiles[index].data & 0xF) - 1];
 			float text_size_coefficient = ((float)field.tile_size_px / text_hint->h);
 			SDL_Rect dst_rect_text;
 			dst_rect_text.w = (int)(text_hint->w * text_size_coefficient);
@@ -63,7 +69,7 @@ void draw_tile(unsigned int index)
 			SDL_RenderCopy(renderer, text_hint->texture, NULL, &dst_rect_text);
 		}
 	}
-	else if (field.tiles[index] & IS_FLAGGED)
+	else if (field.tiles[index].data & IS_FLAGGED)
 	{
 		SDL_RenderCopy(renderer, tex_tile_flagged, NULL, &dst_rect_tile);
 	}
@@ -123,21 +129,21 @@ TileNeighbors get_tile_neighbours(unsigned int index)
 
 void reveal_tile(unsigned int index)
 {
-	Tile* tile = &field.tiles[index];
-	if (*tile & IS_SHOWN | *tile & IS_FLAGGED) return;
-	if (*tile & IS_BOMB)
+	TileData* tile_data = &field.tiles[index].data;
+	if (*tile_data & IS_SHOWN | *tile_data & IS_FLAGGED) return;
+	if (*tile_data & IS_BOMB)
 	{
 		lose();
 		return;
 	}
-	*tile |= IS_SHOWN;
+	*tile_data |= IS_SHOWN;
 	field.tiles_remaining--;
 	if (field.tiles_remaining == field.bomb_quantity)
 	{
 		win();
 		return;
 	}
-	if ((*tile & 0xF) > 0) return;
+	if ((*tile_data & 0xF) > 0) return;
 	TileNeighbors neighbors = get_tile_neighbours(index);
 	for (int i = 0; i < 8; i++)
 	{
@@ -149,17 +155,17 @@ void reveal_tile(unsigned int index)
 
 void flag_tile(unsigned int tile_index)
 {
-	if (field.tiles[tile_index] & IS_SHOWN) return;
-	field.tiles[tile_index] ^= IS_FLAGGED;
-	field.guesses_remaining += field.tiles[tile_index] & IS_FLAGGED ? -1 : 1;
+	if (field.tiles[tile_index].data & IS_SHOWN) return;
+	field.tiles[tile_index].data ^= IS_FLAGGED;
+	field.guesses_remaining += field.tiles[tile_index].data & IS_FLAGGED ? -1 : 1;
 }
 
 void win()
 {
 	for (unsigned int i = 0; i < field.bomb_quantity; i++)
 	{
-		if (field.tiles[field.bomb_indexes[i]] & IS_FLAGGED) continue;
-		field.tiles[field.bomb_indexes[i]] |= IS_FLAGGED;
+		if (field.tiles[field.bomb_indexes[i]].data & IS_FLAGGED) continue;
+		field.tiles[field.bomb_indexes[i]].data |= IS_FLAGGED;
 	}
 	field.guesses_remaining = 0;
 	update_title();
@@ -250,8 +256,8 @@ static int make_bombs(unsigned int quantity, unsigned int start_index)
 				break;
 			};
 		}
-		if (on_protected_tile || field.tiles[chosen_index] & IS_BOMB) continue;
-		field.tiles[chosen_index] |= IS_BOMB;
+		if (on_protected_tile || field.tiles[chosen_index].data & IS_BOMB) continue;
+		field.tiles[chosen_index].data |= IS_BOMB;
 		quantity--;
 		field.bomb_indexes[quantity] = chosen_index;
 	} while (quantity > 0);
@@ -268,7 +274,7 @@ static void calc_hints()
 		{
 			int neighbor_index = ((unsigned int*)&neighbors)[j];
 			if (neighbor_index == bomb_index) continue;
-			field.tiles[neighbor_index]++;
+			field.tiles[neighbor_index].data++;
 		}
 	}
 }

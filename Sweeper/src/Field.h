@@ -1,7 +1,21 @@
 #ifndef __FIELD_H__
 #define __FIELD_H__
 
-typedef char Tile;
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include "Tween.h"
+#include <SDL_rect.h>
+
+typedef char TileData;
+typedef SDL_Point V2;
+typedef struct Tile
+{
+	TileData data;
+	V2 tile_scale;
+	V2 flag_scale;
+	twn_Player* tween;
+} Tile;
 typedef struct Field
 {
 	Tile* tiles;
@@ -21,9 +35,6 @@ typedef struct TileNeighbors
 	unsigned int ul, uc, ur, cl, cr, ll, lc, lr;
 } TileNeighbors;
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 #include "Assets.h"
 #include "Game.h"
 
