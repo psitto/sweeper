@@ -33,7 +33,10 @@ void destroy_field()
 		free(field.tiles[i].tween);
 	}
 	free(field.tiles);
-	free(field.bomb_indexes);
+	if (field.bomb_quantity != 0)
+	{
+		free(field.bomb_indexes);
+	}
 }
 
 void draw_tile(unsigned int index)
