@@ -71,6 +71,12 @@ void handle_input() {
 				renew_field(field.difficulty);
 				draw_field();
 			}
+#ifdef _DEBUG
+			if (e.key.keysym.sym == SDLK_SPACE)
+			{
+				win();
+			}
+#endif
 			break;
 		case SDL_WINDOWEVENT:
 			if (e.window.event == SDL_WINDOWEVENT_EXPOSED)
