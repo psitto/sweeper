@@ -69,6 +69,12 @@ void handle_input() {
 			{
 				renew_field(field.difficulty);
 			}
+#ifdef _DEBUG
+			if (e.key.keysym.sym == SDLK_SPACE)
+			{
+				win();
+			}
+#endif
 			break;
 		case SDL_QUIT:
 			running = 0;
