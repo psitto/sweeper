@@ -47,6 +47,7 @@ int start_game();
 void handle_input();
 void end_game();
 void update_title();
+SDL_Rect get_scaled_rect(SDL_Rect rect, float scale);
 static HWND get_window_handle();
 static void make_window_menu();
 #endif

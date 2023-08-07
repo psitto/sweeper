@@ -3,9 +3,6 @@
 const int DIFFICULTY_SIZE[3] = { 8, 16, 20 };
 const int DIFFICULTY_BOMB_QUANTITY[3] = { 10, 40, 99 };
 
-static int make_bombs(unsigned int quantity, unsigned int start_index);
-static void calc_hints();
-
 Field make_field(unsigned int difficulty)
 {
 	Field f;
@@ -46,16 +43,9 @@ void draw_tile(unsigned int index)
 		(index / field.size) * field.tile_size_px,
 		field.tile_size_px,
 		field.tile_size_px };
-	if (field.over && field.tiles[index].data & IS_BOMB)
+	if (field.lost && field.tiles[index].data & IS_BOMB)
 	{
-		if (field.lost)
-		{
-			SDL_RenderCopy(renderer, tex_tile_bomb, NULL, &dst_rect_tile);
-		}
-		else
-		{
-			SDL_RenderCopy(renderer, tex_tile_flagged, NULL, &dst_rect_tile);
-		}
+		SDL_RenderCopy(renderer, tex_tile_bomb, NULL, &dst_rect_tile);
 	}
 	else if (field.tiles[index].data & IS_SHOWN)
 	{
@@ -72,13 +62,14 @@ void draw_tile(unsigned int index)
 			SDL_RenderCopy(renderer, text_hint->texture, NULL, &dst_rect_text);
 		}
 	}
-	else if (field.tiles[index].data & IS_FLAGGED)
-	{
-		SDL_RenderCopy(renderer, tex_tile_flagged, NULL, &dst_rect_tile);
-	}
-	else
+	else 
 	{
 		SDL_RenderCopy(renderer, tex_tile_hidden, NULL, &dst_rect_tile);
+		if (field.tiles[index].data & IS_FLAGGED)
+		{
+			SDL_Rect dst_rect_flag = get_scaled_rect(dst_rect_tile, field.tiles[index].flag_scale);
+			SDL_RenderCopy(renderer, tex_flag, NULL, &dst_rect_flag);
+		}
 	}
 }
 
@@ -158,6 +149,17 @@ void reveal_tile(unsigned int index)
 
 void flag_tile(unsigned int tile_index)
 {
+	twn_Player* tween = field.tiles[tile_index].tween;
+	if (!(field.tiles[tile_index].data & IS_FLAGGED))
+	{
+		if (!twn_get_target(tween) || *twn_get_target(tween) != field.tiles[tile_index].flag_scale)
+		{
+			twn_set_target(tween, &field.tiles[tile_index].flag_scale);
+			twn_set_motion(tween, &MOTION_FLAG_PLACEMENT);
+			twn_set_duration(tween, MOTION_FLAG_PLACEMENT_DURATION);
+		}
+		twn_play(tween);
+	}
 	if (field.tiles[tile_index].data & IS_SHOWN) return;
 	field.tiles[tile_index].data ^= IS_FLAGGED;
 	field.guesses_remaining += field.tiles[tile_index].data & IS_FLAGGED ? -1 : 1;

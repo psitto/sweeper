@@ -5,15 +5,15 @@
 #include <stdlib.h>
 #include <time.h>
 #include "Tween.h"
+#include "Easing.h"
 #include <SDL_rect.h>
 
 typedef char TileData;
-typedef SDL_Point V2;
 typedef struct Tile
 {
 	TileData data;
-	V2 tile_scale;
-	V2 flag_scale;
+	float tile_scale;
+	float flag_scale;
 	twn_Player* tween;
 } Tile;
 typedef struct Field
@@ -45,6 +45,8 @@ typedef struct TileNeighbors
 
 const int DIFFICULTY_SIZE[3];
 const int DIFFICULTY_BOMB_QUANTITY[3];
+const static twn_Motion MOTION_FLAG_PLACEMENT = { 1.3, 1.0, ease_out_back };
+const static time_t MOTION_FLAG_PLACEMENT_DURATION = 200;
 
 Field make_field(unsigned int difficulty);
 void destroy_field();
@@ -60,5 +62,7 @@ void lose();
 void on_left_click();
 void on_right_click();
 void renew_field(unsigned int difficulty);
+static int make_bombs(unsigned int quantity, unsigned int start_index);
+static void calc_hints();
 
 #endif

@@ -119,6 +119,19 @@ void end_game()
 	DestroyMenu(hmenu_help);
 }
 
+SDL_Rect get_scaled_rect(SDL_Rect rect, float scale)
+{
+	scale = fabs(scale);
+	SDL_Rect r;
+	float diff_x = ((rect.w * scale) - rect.w);
+	float diff_y = ((rect.h * scale) - rect.h);
+	r.x = rect.x - diff_x / 2.0;
+	r.y = rect.y - diff_y / 2.0;
+	r.w = rect.w + diff_x;
+	r.h = rect.h + diff_y;
+	return r;
+}
+
 static HWND get_window_handle()
 {
 	SDL_SysWMinfo info_win;

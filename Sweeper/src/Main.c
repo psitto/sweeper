@@ -13,11 +13,18 @@ int main() {
 	load_assets();
 	field = make_field(1);
 	update_title();
-
+	Uint64 t_last = SDL_GetTicks64(), t_current, dt;
 	while (running)
 	{
+		t_current = SDL_GetTicks64();
+		dt = t_current - t_last;
 		handle_input();
+		for (int i = 0; i < field.tile_count; i++)
+		{
+			twn_update(field.tiles[i].tween, dt);
+		}
 		draw_field();
+		t_last = t_current;
 	}
 
 	destroy_field();
