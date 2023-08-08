@@ -19,7 +19,7 @@ Field make_field(unsigned int difficulty)
 		for (int j = 0; j < TILE_TWEEN_COUNT; j++)
 		{
 			f.tiles[i].tweens[j] = twn_make_player();
-	}
+		}
 	}
 	f.over = 0;
 	f.lost = 0;
@@ -34,7 +34,7 @@ void destroy_field()
 		for (int j = 0; j < TILE_TWEEN_COUNT; j++)
 		{
 			free(field.tiles[i].tweens[j]);
-	}
+		}
 	}
 	free(field.tiles);
 	if (field.bomb_quantity != 0)
@@ -157,11 +157,11 @@ void reveal_tile(unsigned int index)
 static void anim_flag_placement(unsigned int tile_index)
 {
 	twn_Player* tween = field.tiles[tile_index].tweens[0];
-			twn_set_target(tween, &field.tiles[tile_index].flag_scale);
-			twn_set_motion(tween, &MOTION_FLAG_PLACEMENT);
-			twn_set_duration(tween, MOTION_FLAG_PLACEMENT_DURATION);
+	twn_set_target(tween, &field.tiles[tile_index].flag_scale);
+	twn_set_motion(tween, &MOTION_FLAG_PLACEMENT);
+	twn_set_duration(tween, MOTION_FLAG_PLACEMENT_DURATION);
 	twn_play(tween);
-		}
+}
 
 void flag_tile(unsigned int tile_index)
 {
@@ -178,18 +178,8 @@ void flag_tile(unsigned int tile_index)
 	field.guesses_remaining += field.tiles[tile_index].data & IS_FLAGGED ? -1 : 1;
 }
 
-void win()
+static void cb_show_win_message(twn_Player* p)
 {
-	for (unsigned int i = 0; i < field.bomb_quantity; i++)
-	{
-		if (field.tiles[field.bomb_indexes[i]].data & IS_FLAGGED) continue;
-		field.tiles[field.bomb_indexes[i]].data |= IS_FLAGGED;
-	}
-	field.guesses_remaining = 0;
-	update_title();
-	field.over = 1;
-	draw_field();
-
 	long long playtime = time(0) - field.starting_time;
 	char time_msg[29];
 	snprintf(time_msg, 29, ":-)\nYour playtime was %02lld:%02lld.", playtime / 60, playtime % 60);
@@ -197,6 +187,22 @@ void win()
 		"You won",
 		time_msg,
 		window);
+}
+
+void win()
+{
+	bool callback_set = false;
+	for (unsigned int i = 0; i < field.bomb_quantity; i++)
+	{
+		if (field.tiles[field.bomb_indexes[i]].data & IS_FLAGGED) continue;
+		flag_tile(field.bomb_indexes[i]);
+		if (callback_set) continue;
+		twn_set_callback(field.tiles[field.bomb_indexes[i]].tweens[0], cb_show_win_message);
+		callback_set = true;
+	}
+	field.guesses_remaining = 0;
+	update_title();
+	field.over = 1;
 }
 
 void lose()
