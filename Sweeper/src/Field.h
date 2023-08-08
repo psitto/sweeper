@@ -47,7 +47,7 @@ typedef struct TileNeighbors
 
 const int DIFFICULTY_SIZE[3];
 const int DIFFICULTY_BOMB_QUANTITY[3];
-const static twn_Motion MOTION_FLAG_PLACEMENT = { 1.3, 1.0, ease_out_back };
+const static twn_Motion MOTION_FLAG_PLACEMENT = { 1.3, 1.0, ease_out_back, "flag_placement" };
 const static time_t MOTION_FLAG_PLACEMENT_DURATION = 200;
 
 Field make_field(unsigned int difficulty);
