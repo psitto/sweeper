@@ -16,18 +16,25 @@ Field make_field(unsigned int difficulty)
 	f.tiles = (Tile*)calloc(f.tile_count, sizeof(Tile));
 	for (int i = 0; i < f.tile_count; i++)
 	{
-		f.tiles[i].tween = twn_make_player();
+		for (int j = 0; j < TILE_TWEEN_COUNT; j++)
+		{
+			f.tiles[i].tweens[j] = twn_make_player();
+	}
 	}
 	f.over = 0;
 	f.lost = 0;
 	return f;
 }
 
+
 void destroy_field()
 {
 	for (int i = 0; i < field.tile_count; i++)
 	{
-		free(field.tiles[i].tween);
+		for (int j = 0; j < TILE_TWEEN_COUNT; j++)
+		{
+			free(field.tiles[i].tweens[j]);
+	}
 	}
 	free(field.tiles);
 	if (field.bomb_quantity != 0)

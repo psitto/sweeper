@@ -8,13 +8,15 @@
 #include "Easing.h"
 #include <SDL_rect.h>
 
+#define TILE_TWEEN_COUNT 2
+
 typedef char TileData;
 typedef struct Tile
 {
 	TileData data;
 	float tile_scale;
 	float flag_scale;
-	twn_Player* tween;
+	twn_Player* tweens[TILE_TWEEN_COUNT];
 } Tile;
 typedef struct Field
 {

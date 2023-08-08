@@ -21,7 +21,10 @@ int main() {
 		handle_input();
 		for (int i = 0; i < field.tile_count; i++)
 		{
-			twn_update(field.tiles[i].tween, dt);
+			for (int j = 0; j < TILE_TWEEN_COUNT; j++)
+			{
+				twn_update(field.tiles[i].tweens[j], dt);
+			}
 		}
 		draw_field();
 		t_last = t_current;
