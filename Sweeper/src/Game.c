@@ -70,7 +70,7 @@ void handle_input() {
 				renew_field(field.difficulty);
 			}
 #ifdef _DEBUG
-			if (e.key.keysym.sym == SDLK_SPACE)
+			if (e.key.keysym.sym == SDLK_SPACE && field.bomb_quantity != 0 && !field.over)
 			{
 				win();
 			}
