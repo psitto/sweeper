@@ -200,6 +200,10 @@ void win()
 		twn_set_callback(field.tiles[field.bomb_indexes[i]].tweens[0], cb_show_win_message);
 		callback_set = true;
 	}
+	if (!callback_set)
+	{
+		cb_show_win_message(NULL);
+	}
 	field.guesses_remaining = 0;
 	update_title();
 	field.over = 1;
