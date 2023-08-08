@@ -154,18 +154,24 @@ void reveal_tile(unsigned int index)
 	}
 }
 
-void flag_tile(unsigned int tile_index)
+static void anim_flag_placement(unsigned int tile_index)
 {
-	twn_Player* tween = field.tiles[tile_index].tween;
-	if (!(field.tiles[tile_index].data & IS_FLAGGED))
-	{
-		if (!twn_get_target(tween) || *twn_get_target(tween) != field.tiles[tile_index].flag_scale)
-		{
+	twn_Player* tween = field.tiles[tile_index].tweens[0];
 			twn_set_target(tween, &field.tiles[tile_index].flag_scale);
 			twn_set_motion(tween, &MOTION_FLAG_PLACEMENT);
 			twn_set_duration(tween, MOTION_FLAG_PLACEMENT_DURATION);
+	twn_play(tween);
 		}
-		twn_play(tween);
+
+void flag_tile(unsigned int tile_index)
+{
+	if (field.tiles[tile_index].data & IS_SHOWN)
+	{
+		return;
+	}
+	if (!(field.tiles[tile_index].data & IS_FLAGGED))
+	{
+		anim_flag_placement(tile_index);
 	}
 	if (field.tiles[tile_index].data & IS_SHOWN) return;
 	field.tiles[tile_index].data ^= IS_FLAGGED;
