@@ -1,5 +1,7 @@
 #include "Game.h"
 
+const SDL_Rect win_rect = { 0, 0, WINW, WINH };
+
 int start_game()
 {
 	time_t t = time(0);
@@ -39,15 +41,21 @@ int start_game()
 		printf("SDL2 renderer creation error.\n");
 		return 0;
 	}
-	SDL_SetRenderDrawColor(renderer, 0x96, 0x96, 0x96, 0xFF);
+	tex_bg = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WINW, WINH);
+	if (tex_bg == NULL)
+	{
+		printf("Couldn't create foreground target texture.\n");
+		return 0;
+	}
+	SDL_SetTextureBlendMode(tex_bg, SDL_BLENDMODE_BLEND);
 	if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG)
 	{
-		printf("SDL_image initialization error.");
+		printf("SDL_image initialization error.\n");
 		return 0;
 	}
 	if (TTF_Init() == -1)
 	{
-		printf("SDL_ttf initialization error.");
+		printf("SDL_ttf initialization error.\n");
 		return 0;
 	}
 	return 1;
@@ -149,6 +157,21 @@ void update_title()
 	char new_title[30];
 	snprintf(new_title, 30, "Sweeper: %d remaining", field.guesses_remaining);
 	SDL_SetWindowTitle(window, new_title);
+}
+
+void render_bg(SDL_Texture* texture, const SDL_Rect* dstrect)
+{
+	if (SDL_GetRenderTarget(renderer) != NULL)
+	{
+		SDL_SetRenderTarget(renderer, NULL);
+	}
+	SDL_RenderCopy(renderer, texture, NULL, dstrect);
+}
+
+void render_fg(SDL_Texture* texture, const SDL_Rect* dstrect)
+{
+	SDL_SetRenderTarget(renderer, tex_bg);
+	SDL_RenderCopy(renderer, texture, NULL, dstrect);
 }
 
 static void make_window_menu()

@@ -30,8 +30,14 @@ The MIT License\n\n\
 Built with SDL2, SDL2_image and SDL2_ttf."
 #define MESSAGE_ABOUT_LENGTH 115
 
+#define COLOR_BG_CLEAR_R 0x96
+#define COLOR_BG_CLEAR_G 0x96
+#define COLOR_BG_CLEAR_B 0x96
+
 SDL_Window* window;
 SDL_Renderer* renderer;
+const SDL_Rect win_rect;
+SDL_Texture* tex_bg;
 Field field;
 int running;
 int mousex;
@@ -47,6 +53,8 @@ int start_game();
 void handle_input();
 void end_game();
 void update_title();
+void render_bg(SDL_Texture* texture, const SDL_Rect* dstrect);
+void render_fg(SDL_Texture* texture, const SDL_Rect* dstrect);
 SDL_Rect get_scaled_rect(SDL_Rect rect, float scale);
 static HWND get_window_handle();
 static void make_window_menu();

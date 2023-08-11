@@ -52,7 +52,7 @@ void draw_tile(unsigned int index)
 		field.tile_size_px };
 	if (field.lost && field.tiles[index].data & IS_BOMB)
 	{
-		SDL_RenderCopy(renderer, tex_tile_bomb, NULL, &dst_rect_tile);
+		render_bg(tex_tile_bomb, &dst_rect_tile);
 	}
 	else if (field.tiles[index].data & IS_SHOWN)
 	{
@@ -66,27 +66,37 @@ void draw_tile(unsigned int index)
 			dst_rect_text.h = (int)(text_hint->h * text_size_coefficient);
 			dst_rect_text.x = dst_rect_tile.x + (dst_rect_tile.w - dst_rect_text.w) / 2;
 			dst_rect_text.y = dst_rect_tile.y + (dst_rect_tile.h - dst_rect_text.h) / 2;
-			SDL_RenderCopy(renderer, text_hint->texture, NULL, &dst_rect_text);
+			render_bg(text_hint->texture, &dst_rect_text);
 		}
 	}
 	else 
 	{
-		SDL_RenderCopy(renderer, tex_tile_hidden, NULL, &dst_rect_tile);
+		render_bg(tex_tile_hidden, &dst_rect_tile);
 		if (field.tiles[index].data & IS_FLAGGED)
 		{
 			SDL_Rect dst_rect_flag = get_scaled_rect(dst_rect_tile, field.tiles[index].flag_scale);
-			SDL_RenderCopy(renderer, tex_flag, NULL, &dst_rect_flag);
+			render_fg(tex_flag, &dst_rect_flag);
+			// SDL_RenderCopy(renderer, tex_flag, NULL, &dst_rect_flag);
 		}
 	}
 }
 
 void draw_field()
 {
+	SDL_SetRenderTarget(renderer, tex_bg);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 	SDL_RenderClear(renderer);
+
+	SDL_SetRenderTarget(renderer, NULL);
+	SDL_SetRenderDrawColor(renderer, COLOR_BG_CLEAR_R, COLOR_BG_CLEAR_G, COLOR_BG_CLEAR_B, 0xFF);
+	SDL_RenderClear(renderer);
+
 	for (unsigned int i = 0; i < field.tile_count; i++)
 	{
 		draw_tile(i);
 	}
+
+	SDL_RenderCopy(renderer, tex_bg, 0, &win_rect);
 	SDL_RenderPresent(renderer);
 }
 
