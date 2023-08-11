@@ -26,7 +26,7 @@ int start_game()
 		SDL_WINDOWPOS_CENTERED,
 		WINW,
 		WINH + GetSystemMetrics(SM_CYMENU),
-		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+		SDL_WINDOW_HIDDEN | SDL_WINDOW_OPENGL);
 	if (window == NULL)
 	{
 		printf("SDL2 window creation error.\n");

@@ -13,6 +13,8 @@ int main() {
 	load_assets();
 	field = make_field(1);
 	update_title();
+	SDL_ShowWindow(window);
+	draw_field();
 	Uint64 t_last = SDL_GetTicks64(), t_current, dt;
 	while (running)
 	{
